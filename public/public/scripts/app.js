@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp', ['ui.router'])
+angular.module('angularTokenAuthApp', ['ui.router'])
 .config(['$stateProvider','$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
   //================================================

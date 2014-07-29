@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp')
+angular.module('angularTokenAuthApp')
 .controller('RegisterController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
   init();
   $scope.signup = function () {

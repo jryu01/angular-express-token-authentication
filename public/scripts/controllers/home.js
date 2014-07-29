@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp')
+angular.module('angularTokenAuthApp')
 .controller('HomeController', ['$scope', '$state', 'Auth', 
   function ($scope, $state, Auth) {
   $scope.user = Auth.getUser();

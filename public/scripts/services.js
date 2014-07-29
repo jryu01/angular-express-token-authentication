@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp')
+angular.module('angularTokenAuthApp')
 .factory('Auth', ['$http', function ($http) {
   return {
     signout: function (success, error) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp')
+angular.module('angularTokenAuthApp')
 .controller('LoginController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
   init();
   $scope.signin = function () {

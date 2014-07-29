@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp')
+angular.module('angularTokenAuthApp')
 .controller('RegisterController', ['$scope', '$http', '$state', 'Auth',
   'ACCESS_LEVELS', function ($scope, $http, $state, Auth, ACCESS_LEVELS) {
     

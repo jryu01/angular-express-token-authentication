@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularSessionAuthApp')
+angular.module('angularTokenAuthApp')
   .controller('HomeController', ['$scope', function ($scope) {
     //controller code goes here
     var username;
