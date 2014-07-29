@@ -13,6 +13,10 @@ function list(req, res) {
 	});	
 }
 
+function getMe(req, res) {
+  res.send(req.user);
+}
+
 // function get(req, res){:w
 
 // }
@@ -31,3 +35,4 @@ function list(req, res) {
 
 // public functions
 exports.list = list;
+exports.getMe = getMe;

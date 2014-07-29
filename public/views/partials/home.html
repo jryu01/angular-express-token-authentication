@@ -1,0 +1,6 @@
+<h1>User Home Page</h1>
+<h4>Logged in user</h4>
+<p> <strong>Email: </strong> {{ user.local.email }}</p>
+<p> <strong>Access Token: </strong> {{ user.access_token }} </p>
+<button class="btn btn-md btn-primary"
+        ng-click="logout()">Log out</button>

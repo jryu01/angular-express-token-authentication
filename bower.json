@@ -1,0 +1,22 @@
+{
+  "name": "angular-express-token-authentication",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jryu01/angular-express-token-authentication",
+  "authors": [
+    "Jaehwan Ryu <time0121@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.15",
+    "bootstrap": "~3.2.0",
+    "angular-cookies": "~1.2.21"
+  }
+}

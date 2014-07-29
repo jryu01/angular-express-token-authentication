@@ -13,15 +13,22 @@ var User = require('../models/user');
 function bearerAuth(req, res, next) {
   passport.authenticate('bearer', { session: false }, 
   function(err, user, info) {
-
-  if (err) return next(err);
-  if (!user) {
-    return res.send(400, { 
-      message: "Access token has expired or is invalid" 
+    if (err) return next(err);
+    if (!req.query.access_token) {
+      return res.send(401, {
+        message: "Unauthorized - access_token must be provided"
+      });
+    }
+    if (!user) {
+      return res.send(401, { 
+        message: "Access token has expired or is invalid" 
+      });
+    }
+    // login user and proceed to next
+    req.login(user, { session: false }, function (err) {
+      if (err) return next(err);
+      next();
     });
-  }
-  // proceed to next
-  next();
   })(req, res, next);
 }
 
@@ -58,7 +65,7 @@ function issueAccessToken(req, res) {
           // issue a token
           var token = issueTokenWithUid(user.id);
 
-          return res.send({ access_token: token });
+          return res.send({ access_token: token, user: user });
         });
       }); 
 

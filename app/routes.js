@@ -13,17 +13,21 @@ var path = require('path');
 
 module.exports = function (app) {
 
-  // routes for sign in,  sigin up, and signout processes
+  // routes for sign in, sigin up
   app.post('/signin', authCtrl.issueAccessToken);
   app.post('/signup', authCtrl.signup);
 
-  // secured restful api routes
-  app.all('/api/*', authCtrl.bearerAuth);
+  // Restful api routes
+  
+  app.post('/api/access_token', authCtrl.issueAccessToken);
 
+  // secured api routes (requires access token)
+  app.all('/api/*', authCtrl.bearerAuth);
+  app.get('/api/me', auth.requiresAuth, userCtrl.getMe);
   app.get('/api/users', auth.requiresAuth, userCtrl.list);
 
   // serve index.html for all other route
   app.all('/*', function (req, res) { 
-    res.sendfile(path.join(__dirname,'../public/index.html'));
+    res.sendfile(path.join(__dirname,'../public/views/index.html'));
   }); 
 };
