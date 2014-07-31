@@ -27,21 +27,30 @@ angular.module('angularTokenAuthApp')
   };
   $scope.signinWithFacebook = function () {
     facebook.login().then(function (result) {
-      console.log(result);
       var data = {
         grantType: 'facebook_token',
         token: result.authResponse.accessToken
       };
-      return $http.post('/api/access_token', data);
-    })
-    .then(function (result) {
-      var data = result.data;
-      var user = data.user;
-      user.access_token = data.access_token;
-      user.role = ACCESS_LEVELS.user; 
-      Auth.setUser(user);
-      $state.go('user.home');
+      // exchange access token with facebook token
+      $http
+      .post('/api/access_token', data)
+      .success(function (data, status, headers, config) {
+        var user = data.user;
+        user.access_token = data.access_token;
+        user.role = ACCESS_LEVELS.user; 
+        Auth.setUser(user);
+        $state.go('user.home');
+      })
+      .error(function (data, status, headers, config) {
+        $scope.loginForm.serverError = {
+          message : 'Error: Attempt failed'
+        };
+        if (data.message) {
+          $scope.loginForm.serverError.message = data.message;
+        }
+      });
     });
+ 
 
   };
 }]);
