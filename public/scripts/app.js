@@ -1,6 +1,9 @@
 'use strict';
 
-angular.module('angularTokenAuthApp', ['ui.router', 'ngCookies'])
+angular.module('angularTokenAuthApp', ['ui.router', 
+  'ngCookies',
+  'angularTokenAuthApp.services'
+  ])
 .constant('ACCESS_LEVELS', {
   pub: 1,
   user: 2
@@ -39,9 +42,6 @@ angular.module('angularTokenAuthApp', ['ui.router', 'ngCookies'])
       data: {
         accessLevel: ACCESS_LEVELS.user
       }
-      // resolve: {
-      //   requiresSignin: checkSignin
-      // }
     })
     .state('user.home', {
       url: '/',
@@ -52,6 +52,9 @@ angular.module('angularTokenAuthApp', ['ui.router', 'ngCookies'])
   $locationProvider.html5Mode(true);
   $urlRouterProvider.otherwise('/');
 
+}])
+.config(['facebookProvider', function (facebookProvider) {
+  facebookProvider.setAppId(481914391941067);
 }])
 .run(['$rootScope', '$state', 'Auth', function ($rootScope, $state, Auth) {
 

@@ -26,6 +26,7 @@ var UserSchema = new Schema({
     name: String,
     email: String,
     acessToken: String,
+    profilePic: String,
   } 
 }); 
 

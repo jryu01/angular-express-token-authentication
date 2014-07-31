@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('angularTokenAuthApp')
-.controller('LoginController', ['$scope', '$http', '$state', 'Auth', 
-  'ACCESS_LEVELS', function ($scope, $http, $state, Auth, ACCESS_LEVELS) {
+.controller('LoginController', 
+  ['$scope', '$http', '$state', 'Auth', 'facebook', 'ACCESS_LEVELS', 
+  function ($scope, $http, $state, Auth, facebook, ACCESS_LEVELS) {
+
   $scope.signinData = {}; 
   $scope.signin = function () {
     $http
@@ -22,5 +24,24 @@ angular.module('angularTokenAuthApp')
         $scope.loginForm.serverError.message = data.message;
       }
     });
+  };
+  $scope.signinWithFacebook = function () {
+    facebook.login().then(function (result) {
+      console.log(result);
+      var data = {
+        grantType: 'facebook_token',
+        token: result.authResponse.accessToken
+      };
+      return $http.post('/api/access_token', data);
+    })
+    .then(function (result) {
+      var data = result.data;
+      var user = data.user;
+      user.access_token = data.access_token;
+      user.role = ACCESS_LEVELS.user; 
+      Auth.setUser(user);
+      $state.go('user.home');
+    });
+
   };
 }]);

@@ -37,10 +37,11 @@
            value="Sign In"
            ng-disabled="loginForm.$invalid"> 
   </form>
-<!--   <h5 class="text-center"> or </h5>
-  <a target="_self" ng-href="" class="btn btn-primary btn-block">Sign In with facebook</a>
-  <br>
- -->  
+  <h5 class="text-center"> or </h5>
+  <button class="btn btn-primary btn-block"
+      ng-click="signinWithFacebook()">
+    Sign In With Facebook
+  </button>
  <p class="text-center">
     <a ng-href="/register">Register if you don't hava an account</a>
   </p>
