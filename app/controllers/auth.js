@@ -12,13 +12,18 @@ var User = require('../models/user');
 var https = require('https');
 var _ = require('lodash');
 
+///////////////////////////////////////////////////////////////////////////////
+// Middlewares
+///////////////////////////////////////////////////////////////////////////////
+
+// bearerAuth middleware
 function bearerAuth(req, res, next) {
   passport.authenticate('bearer', { session: false }, 
   function(err, user, info) {
     if (err) return next(err);
     if (!req.query.access_token) {
-      return res.send(401, {
-        message: "Unauthorized - access_token must be provided"
+      return res.send(400, {
+        message: "An access token must be provided"
       });
     }
     if (!user) {
@@ -33,6 +38,16 @@ function bearerAuth(req, res, next) {
     });
   })(req, res, next);
 }
+
+// generic require signin middleware
+function requiresAuth(req, res, next) {
+  if (!req.isAuthenticated()) {
+    return res.send(401, { message: "requires authentication"});
+  }
+  next();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 function issueAccessToken(req, res) {
 
@@ -74,7 +89,7 @@ function issueAccessToken(req, res) {
 
     // call after getting profile and profile pic
     var done = _.after(2, function () {
-      
+
       // find a user with facebook id and create one if does not already exist
       User.findOne({'facebook.id': profile.id}, function (err, user) {
 
@@ -178,7 +193,9 @@ function signup(req, res, next) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 // Helpers
+///////////////////////////////////////////////////////////////////////////////
 function issueTokenWithUid(uid) {
 
   var curDate = new Date();
@@ -196,4 +213,5 @@ function issueTokenWithUid(uid) {
 // public functions and variables 
 exports.issueAccessToken = issueAccessToken;
 exports.bearerAuth = bearerAuth;
+exports.requiresAuth = requiresAuth;
 exports.signup = signup;

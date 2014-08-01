@@ -6,7 +6,6 @@
 'use strict';
 
 var passport = require('passport');
-var auth = require('../config/middlewares/authorization');
 var authCtrl = require('./controllers/auth');
 var userCtrl = require('./controllers/user');
 var path = require('path');
@@ -23,8 +22,8 @@ module.exports = function (app) {
 
   // secured api routes (requires access token)
   app.all('/api/*', authCtrl.bearerAuth);
-  app.get('/api/me', auth.requiresAuth, userCtrl.getMe);
-  app.get('/api/users', auth.requiresAuth, userCtrl.list);
+  app.get('/api/me', authCtrl.requiresAuth, userCtrl.getMe);
+  app.get('/api/users', authCtrl.requiresAuth, userCtrl.list);
 
   // serve index.html for all other route
   app.all('/*', function (req, res) { 
