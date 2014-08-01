@@ -7,10 +7,11 @@
 
 var passport = require('passport');
 var jwt = require('jwt-simple');
-var config = require('../../config/config');
-var User = require('../models/user');
 var https = require('https');
 var _ = require('lodash');
+var request = require('request');
+var config = require('../../config/config');
+var User = require('../models/user');
 
 ///////////////////////////////////////////////////////////////////////////////
 // Middlewares
@@ -74,81 +75,45 @@ function issueAccessToken(req, res) {
 
   //Exchange 3rd party acess token with users access token (for now, facebook only)
   } else if (req.body.grantType && req.body.token) {
-    if (req.body.grantType !== "facebook_token") {
-      return res.send(400);
-    }
-    // get facebook profile and picture with provided token
+    if (req.body.grantType === "facebook_token") {
 
-    var fbToken = req.body.token;
-    var url = "https://graph.facebook.com/me?access_token=" + fbToken;
-    var picUrl = "https://graph.facebook.com/me/" + 
-        "picture?redirect=false&access_token=" + fbToken;
-
-    var profile = null;
-    var profilePic = null;
-
-    // call after getting profile and profile pic
-    var done = _.after(2, function () {
-
-      // find a user with facebook id and create one if does not already exist
-      User.findOne({'facebook.id': profile.id}, function (err, user) {
-
+      getFacebookProfile(req.body.token, function (err, profile) {
         if (err) { return res.send(500, err); }
-        if (user) {
-          // issue a token
-          var token = issueTokenWithUid(user.id);
-          return res.send({ access_token: token, user: user });
-        } 
-        if (!user) {
-          // create a new user
-          user = new User();
 
-          user.facebook.id = profile.id;
-          user.facebook.name = (profile.first_name || "") + 
-                              ' ' + (profile.last_name || "");
-          user.facebook.name = user.facebook.name.trim();
-          user.facebook.email = profile.email;
-          user.facebook.accessToken = fbToken;
-          if (profilePic.data) {
-            user.facebook.profilePic = profilePic.data.url;
-          }
-
-          //save user and issue a token
-          user.save(function (err) {
-            if (err) { return res.send(500, err); }
+        // find a user with facebook id and create one 
+        // if does not already exist
+        User.findOne({'facebook.id': profile.id}, function (err, user) {
+          if (err) { return res.send(500, err); }
+          if (user) {
             // issue a token
             var token = issueTokenWithUid(user.id);
             return res.send({ access_token: token, user: user });
-          });
-        }
-      });
+          } 
+          if (!user) {
+            // create a new user
+            user = new User();
 
-    });
+            user.facebook.id = profile.id;
+            user.facebook.name = (profile.first_name || "") + 
+                                ' ' + (profile.last_name || "");
+            user.facebook.name = user.facebook.name.trim();
+            user.facebook.email = profile.email;
+            user.facebook.accessToken = req.body.token;
+            user.facebook.profilePic = profile.profilePic.url;
 
-    // get profile
-    https.get(url, function (res) {
-      var data = "";
-      res.on('data', function (chunk) {
-        data += chunk;
+            //save user and issue a token
+            user.save(function (err) {
+              if (err) { return res.send(500, err); }
+              // issue a token
+              var token = issueTokenWithUid(user.id);
+              return res.send({ access_token: token, user: user });
+            });
+          }
+        });
       });
-      res.on('end', function () {
-        profile = JSON.parse(data);
-        done(); 
-      });
-    });
-
-    // get profile picture url
-    https.get(picUrl, function (res) {
-      var data = "";
-      res.on('data', function (chunk) {
-        data += chunk;
-      });
-      res.on('end', function () {
-        profilePic = JSON.parse(data);
-        done();
-      });
-    });
-
+    } else {
+      return res.send(400, 'Unsupported grant type');
+    }
   } else {
     return res.send(400, 'Missing credentials');
   }
@@ -208,6 +173,48 @@ function issueTokenWithUid(uid) {
   }, config.jwtsecret);
 
   return token;
+}
+function getFacebookProfile(fbToken, callback) {
+
+  // get facebook profile and picture with provided token
+  var url = "https://graph.facebook.com/me?access_token=" + fbToken;
+  var picUrl = "https://graph.facebook.com/me/" + 
+      "picture?redirect=false&access_token=" + fbToken;
+
+  var profile = null;
+  var profilePic = null;
+  var requestFail = false;
+
+  // excute callback after being called 2 times (after getting profile and pic)
+  var done = _.after(2, function () {
+    if (requestFail) {
+      var err = {
+        message: 'fail to get facebook profile'
+      };
+      return callback(err, null);
+    }
+    profile.profilePic = profilePic.data;
+    return callback(null, profile);
+  });
+
+  // get profile
+  request(url, function (error, response, body) {
+    if(!error && response.statusCode === 200) {
+      profile = JSON.parse(body);
+    } else {
+      requestFail = true;
+    }
+    done();
+  });
+  // get profile picture url
+  request(url, function (error, response, body) {
+    if(!error && response.statusCode === 200) {
+      profilePic = JSON.parse(body);
+    } else {
+      requestFail = true;
+    }
+    done();
+  });
 }
 
 // public functions and variables 
