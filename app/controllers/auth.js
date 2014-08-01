@@ -72,7 +72,7 @@ function issueAccessToken(req, res) {
         });
       }); 
 
-  //Exchange token with 3rd party acess token (for now, facebook only)
+  //Exchange 3rd party acess token with users access token (for now, facebook only)
   } else if (req.body.grantType && req.body.token) {
     if (req.body.grantType !== "facebook_token") {
       return res.send(400);

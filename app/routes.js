@@ -20,7 +20,7 @@ module.exports = function (app) {
   
   app.post('/api/access_token', authCtrl.issueAccessToken);
 
-  // secured api routes (requires access token)
+  // routes which require acces_token
   app.all('/api/*', authCtrl.bearerAuth);
   app.get('/api/me', authCtrl.requiresAuth, userCtrl.getMe);
   app.get('/api/users', authCtrl.requiresAuth, userCtrl.list);

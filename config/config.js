@@ -14,7 +14,8 @@ function getConfig (env) {
 
   var config = {};
 
-  config.all =  {
+  // Common configuration
+  config.common =  {
     root: rootPath,
     port: process.env.PORT || 3000,
     mongo: {},
@@ -29,11 +30,6 @@ function getConfig (env) {
     env: "development",
     mongo: {
       url: "mongodb://localhost/token-auth"
-    },
-    facebook: {
-      clientID: "481914391941067",
-      clientSecret: "0a1cb8b41c20ed13490b1ea494e5ec03",
-      callbackURL: "http://localhost:3000/auth/facebook/callback" 
     }
   };
 
@@ -46,7 +42,7 @@ function getConfig (env) {
   config.production = {
 
   };
-  return _.merge(config.all, config[env]);
+  return _.merge(config.common, config[env]);
 }
 
 module.exports = getConfig(env);
