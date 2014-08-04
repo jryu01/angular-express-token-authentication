@@ -33,10 +33,13 @@ function bearerAuth(req, res, next) {
       });
     }
     // login user and proceed to next
-    req.login(user, { session: false }, function (err) {
-      if (err) return next(err);
-      next();
-    });
+    // console.log(req.login.toString());
+    req.user = user;
+    next();
+    // req.login(user, { session: false }, function (err) {
+    //   if (err) return next(err);
+    //   next();
+    // });
   })(req, res, next);
 }
 
@@ -207,7 +210,7 @@ function getFacebookProfile(fbToken, callback) {
     done();
   });
   // get profile picture url
-  request(url, function (error, response, body) {
+  request(picUrl, function (error, response, body) {
     if(!error && response.statusCode === 200) {
       profilePic = JSON.parse(body);
     } else {
