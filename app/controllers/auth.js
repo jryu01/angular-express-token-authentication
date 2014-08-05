@@ -8,7 +8,6 @@
 var passport = require('passport');
 var jwt = require('jwt-simple');
 var https = require('https');
-var _ = require('lodash');
 var request = require('request');
 var config = require('../../config/config');
 var User = require('../models/user');
@@ -32,14 +31,8 @@ function bearerAuth(req, res, next) {
         message: "Access token has expired or is invalid" 
       });
     }
-    // login user and proceed to next
-    // console.log(req.login.toString());
     req.user = user;
     next();
-    // req.login(user, { session: false }, function (err) {
-    //   if (err) return next(err);
-    //   next();
-    // });
   })(req, res, next);
 }
 
@@ -97,12 +90,12 @@ function issueAccessToken(req, res) {
             user = new User();
 
             user.facebook.id = profile.id;
-            user.facebook.name = (profile.first_name || "") + 
-                                ' ' + (profile.last_name || "");
-            user.facebook.name = user.facebook.name.trim();
+            user.facebook.name = profile.name;
             user.facebook.email = profile.email;
             user.facebook.accessToken = req.body.token;
-            user.facebook.profilePic = profile.profilePic.url;
+            if (profile.picture && profile.picture.data) {
+              user.facebook.profilePic = profile.picture.data.url;
+            }
 
             //save user and issue a token
             user.save(function (err) {
@@ -180,43 +173,21 @@ function issueTokenWithUid(uid) {
 function getFacebookProfile(fbToken, callback) {
 
   // get facebook profile and picture with provided token
-  var url = "https://graph.facebook.com/me?access_token=" + fbToken;
-  var picUrl = "https://graph.facebook.com/me/" + 
-      "picture?redirect=false&access_token=" + fbToken;
+  var url = 'https://graph.facebook.com/me';
+  var fields = 'id,name,first_name,last_name,email,picture';
+  url = url + '?fields=' + fields + '&access_token=' + fbToken;
 
-  var profile = null;
-  var profilePic = null;
-  var requestFail = false;
-
-  // excute callback after being called 2 times (after getting profile and pic)
-  var done = _.after(2, function () {
-    if (requestFail) {
-      var err = {
-        message: 'fail to get facebook profile'
-      };
-      return callback(err, null);
-    }
-    profile.profilePic = profilePic.data;
-    return callback(null, profile);
-  });
-
-  // get profile
+  // get facebook profile
   request(url, function (error, response, body) {
     if(!error && response.statusCode === 200) {
-      profile = JSON.parse(body);
+      var profile = JSON.parse(body);
+      return callback(null, profile);
     } else {
-      requestFail = true;
+      var err = new Error();
+      err.message = 'Failed to fetch facebook user profile';
+      err.status = 500;
+      return callback(err);
     }
-    done();
-  });
-  // get profile picture url
-  request(picUrl, function (error, response, body) {
-    if(!error && response.statusCode === 200) {
-      profilePic = JSON.parse(body);
-    } else {
-      requestFail = true;
-    }
-    done();
   });
 }
 

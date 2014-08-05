@@ -55,6 +55,7 @@ angular.module('angularTokenAuthApp', ['ui.router',
 }])
 .config(['facebookProvider', function (facebookProvider) {
   facebookProvider.setAppId(481914391941067);
+  facebookProvider.setPermissions('email,picture');
 }])
 .run(['$rootScope', '$state', 'Auth', function ($rootScope, $state, Auth) {
 
