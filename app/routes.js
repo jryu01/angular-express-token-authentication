@@ -26,7 +26,7 @@ module.exports = function (app) {
   app.get('/api/users', authCtrl.requiresAuth, userCtrl.list);
 
   // serve index.html for all other route
-  app.all('/*', function (req, res) { 
+  app.get('/', function (req, res) { 
     res.sendfile(path.join(__dirname,'../public/views/index.html'));
   }); 
 };
