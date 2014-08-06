@@ -1,5 +1,15 @@
 angular-express-token-authentication
 =======================
+_______________________
 
-1. `npm install`
-2. `node server.js`
+Installation
+-------
+
+```sh
+npm install
+node server.js
+```
+
+Demo
+----
+http://angular-express-token-auth.herokuapp.com
