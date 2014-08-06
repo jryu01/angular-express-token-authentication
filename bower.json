@@ -17,6 +17,7 @@
   "dependencies": {
     "angular": "~1.2.15",
     "bootstrap": "~3.2.0",
-    "angular-cookies": "~1.2.21"
+    "angular-cookies": "~1.2.21",
+    "angular-ui-router": "~0.2.10"
   }
 }
