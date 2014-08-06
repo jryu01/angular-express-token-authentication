@@ -40,7 +40,10 @@ function getConfig (env) {
 
   // Production configuration
   config.production = {
-
+    env: "production",
+    mongo: {
+      url: process.env.MONGOLAB_URI || process.env.MONGOHQ_URL
+    }
   };
   return _.merge(config.common, config[env]);
 }
