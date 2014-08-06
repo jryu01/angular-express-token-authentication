@@ -10,7 +10,8 @@ angular.module('angularTokenAuthApp')
     $http
     .post('/signin', $scope.signinData)
     .success(function (data, status, headers, config) {
-      var user = data.user;
+      var user = {};
+      user.userId = data.user.id;
       user.access_token = data.access_token;
       user.role = ACCESS_LEVELS.user; 
       Auth.setUser(user);
@@ -35,7 +36,8 @@ angular.module('angularTokenAuthApp')
       $http
       .post('/api/access_token', data)
       .success(function (data, status, headers, config) {
-        var user = data.user;
+        var user = {};
+        user.userId = data.user.id;
         user.access_token = data.access_token;
         user.role = ACCESS_LEVELS.user; 
         Auth.setUser(user);

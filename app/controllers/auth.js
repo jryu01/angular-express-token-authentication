@@ -22,7 +22,7 @@ function bearerAuth(req, res, next) {
   function(err, user, info) {
     if (err) return next(err);
     if (!req.query.access_token) {
-      return res.send(400, {
+      return res.send(401, {
         message: "An access token must be provided"
       });
     }

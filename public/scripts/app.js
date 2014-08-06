@@ -52,6 +52,31 @@ angular.module('angularTokenAuthApp', ['ui.router',
   $locationProvider.html5Mode(true);
   $urlRouterProvider.otherwise('/');
 
+
+  //================================================
+  // An interceptor for AJAX errors
+  //================================================
+  var interceptor = ['$q', '$rootScope', '$injector', 'Auth',
+  function ($q, $rootScope, $injector, Auth) {
+    return {
+      request: function (request) {
+        if (request.url.indexOf('/api/') >= 0) {
+          request.params = request.params || {};
+          request.params.access_token = Auth.getToken();
+        }
+        return request;
+      },
+      responseError: function (rejection) {
+          if (rejection.status === 401) {
+            var $state = $injector.get('$state');            
+            $state.go('public.login');
+          }
+        return $q.reject(rejection);
+      }
+    };
+  }];
+  $httpProvider.interceptors.push(interceptor);
+  
 }])
 .config(['facebookProvider', function (facebookProvider) {
   facebookProvider.setAppId(481914391941067);
