@@ -7,7 +7,13 @@ Installation
 
 ```sh
 npm install
-node server.js
+npm start 
+```
+
+Test
+---
+```sh
+npm test
 ```
 
 Demo
