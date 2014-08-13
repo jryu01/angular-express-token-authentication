@@ -4,7 +4,9 @@ angular.module('angularTokenAuthApp')
 .controller('RegisterController', ['$scope', '$http', '$state', 'Auth',
   'ACCESS_LEVELS', function ($scope, $http, $state, Auth, ACCESS_LEVELS) {
     
-  $scope.signupData = {}; 
+  $scope.signupData = {
+    grantType: 'password'
+  }; 
 
   $scope.signup = function () {
     $http

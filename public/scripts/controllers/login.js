@@ -5,7 +5,9 @@ angular.module('angularTokenAuthApp')
   ['$scope', '$http', '$state', 'Auth', 'facebook', 'ACCESS_LEVELS', 
   function ($scope, $http, $state, Auth, facebook, ACCESS_LEVELS) {
 
-  $scope.signinData = {}; 
+  $scope.signinData = {
+    grantType: 'password'
+  }; 
   $scope.signin = function () {
     $http
     .post('/signin', $scope.signinData)
@@ -29,8 +31,8 @@ angular.module('angularTokenAuthApp')
   $scope.signinWithFacebook = function () {
     facebook.login().then(function (result) {
       var data = {
-        grantType: 'facebook_token',
-        token: result.authResponse.accessToken
+        grantType: 'facebookToken',
+        facebookToken: result.authResponse.accessToken
       };
       // exchange access token with facebook token
       $http

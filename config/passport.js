@@ -15,7 +15,14 @@ module.exports = function (passport, config) {
   passport.use(new BearerStrategy(
   function (token, done) {
 
-    var decoded = jwt.decode(token, config.jwtsecret);
+    var decoded = null;
+    try {
+      decoded = jwt.decode(token, config.jwtsecret);
+    } catch (e) {
+      var err = new Error();
+      err.message = "Invalid Token: " + e.message;
+      return done(err, false);
+    }
 
     if (decoded.exp <= Date.now()) {
       return done(null, false, {

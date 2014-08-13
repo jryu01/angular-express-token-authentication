@@ -33,3 +33,4 @@ server.listen(app.get('port'), function () {
   console.log(config.app.name + ' server listening on port ' + 
               app.get('port') + ' for ' + config.env);
 });
+exports.app = app;

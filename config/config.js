@@ -35,7 +35,11 @@ function getConfig (env) {
 
   // Test configuration
   config.test = {
-
+    env: "test",
+    port: process.env.PORT || 3030,
+    mongo: {
+      url: "mongodb://localhost/token-auth-test"
+    }
   };
 
   // Production configuration
