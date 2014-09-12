@@ -2,6 +2,7 @@
 
 angular.module('angularTokenAuthApp', ['ui.router', 
   'ngCookies',
+  'angularTokenAuthApp.controllers',
   'angularTokenAuthApp.services'
   ])
 .constant('ACCESS_LEVELS', {
@@ -83,13 +84,12 @@ angular.module('angularTokenAuthApp', ['ui.router',
   facebookProvider.setPermissions('email,picture');
 }])
 .run(['$rootScope', '$state', 'Auth', function ($rootScope, $state, Auth) {
-
   $rootScope.$on('$stateChangeStart', 
     function (event, toState, toParams, fromState, fromParams) {
     if (!Auth.isAuthorized(toState.data.accessLevel)) {
       if (Auth.isLoggedIn()) {
         // the user is logged in, but does not have permissions
-        // to view the view 
+        // to view the view (not authorized) 
         event.preventDefault();
         $state.go('user.home');
       } else {

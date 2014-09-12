@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularTokenAuthApp')
+angular.module('angularTokenAuthApp.controllers', [])
 .controller('HomeController', ['$scope', '$state', '$http', 'Auth',
   function ($scope, $state, $http, Auth) {
 
@@ -9,9 +9,6 @@ angular.module('angularTokenAuthApp')
     $scope.user = user;
   });
 
-  // $scope.user = Auth.getUser();
-
-  console.log($scope.user);
   $scope.logout = function () {
     Auth.logout();
     $state.go('public.login');

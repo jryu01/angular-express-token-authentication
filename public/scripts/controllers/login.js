@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angularTokenAuthApp')
+angular.module('angularTokenAuthApp.controllers')
 .controller('LoginController', 
   ['$scope', '$http', '$state', 'Auth', 'facebook', 'ACCESS_LEVELS', 
   function ($scope, $http, $state, Auth, facebook, ACCESS_LEVELS) {

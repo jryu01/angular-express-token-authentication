@@ -2,6 +2,15 @@
   "node": true,
 
   "globals": {
-    "angular": false
+    "angular": false,
+    "sinon": false,
+    "it": false,
+    "describe": false,
+    "before": false,
+    "after": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "expect": false,
+    "inject": false
   }
 }
