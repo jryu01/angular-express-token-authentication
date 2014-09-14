@@ -7,6 +7,7 @@ angular.module('angularTokenAuthApp.controllers')
   $scope.signupData = {
     grantType: 'password'
   }; 
+  $scope.signupForm = {};
 
   $scope.signup = function () {
     $http
