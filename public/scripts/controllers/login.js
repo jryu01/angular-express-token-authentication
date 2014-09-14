@@ -8,6 +8,8 @@ angular.module('angularTokenAuthApp.controllers')
   $scope.signinData = {
     grantType: 'password'
   }; 
+  $scope.loginForm = {};
+  
   $scope.signin = function () {
     $http
     .post('/signin', $scope.signinData)

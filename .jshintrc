@@ -1,6 +1,11 @@
 {
-  "node": true,
+  "strict": true,
+  "curly": true,
+  "eqeqeq": true,
+  "undef": true,
+  "unused": "vars",
 
+  "node": true,
   "globals": {
     "angular": false,
     "sinon": false,
