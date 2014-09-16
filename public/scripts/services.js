@@ -1,6 +1,10 @@
 'use strict';
 
 angular.module('angularTokenAuthApp.services', [])
+.constant('ACCESS_LEVELS', {
+  pub: 1,
+  user: 2
+})
 .provider('facebook', [function () {
   var config = {
     permissions: 'email',

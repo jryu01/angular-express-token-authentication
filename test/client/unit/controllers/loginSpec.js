@@ -89,6 +89,7 @@ describe('Controller: LoginController', function () {
       expect($state.go).to.have.been.calledWith('user.home');
 
   });
+  
   it('should have proper error handling with signinWithFacebook function', function () {
 
     $httpBackend.expectPOST('/api/access_token').respond(500, {});

@@ -5,10 +5,6 @@ angular.module('angularTokenAuthApp', ['ui.router',
   'angularTokenAuthApp.controllers',
   'angularTokenAuthApp.services'
   ])
-.constant('ACCESS_LEVELS', {
-  pub: 1,
-  user: 2
-})
 .config(['$stateProvider','$urlRouterProvider', '$locationProvider', '$httpProvider', 'ACCESS_LEVELS', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, ACCESS_LEVELS) {
 
   //================================================
