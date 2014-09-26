@@ -38,11 +38,12 @@ describe('Service: Auth', function () {
     Auth = $injector.get('Auth');
   }));
 
+  //TODO: with user cookie and without user cookie 
   it('should call $cookieStore.get on initialization', function () {
     expect(cookieStoreMock.get).to.have.been.calledWith('user');
   });
 
-  describe('setUser()', function () {
+  describe('#setUser', function () {
     it('should call $cookieStore.put whend its called', function () {
       var user = { id: 123, role: 2, access_token: "token123" };
       Auth.setUser(user);
@@ -70,7 +71,7 @@ describe('Service: Auth', function () {
     });
   });
 
-  describe('isAuthorized()', function () {
+  describe('#isAuthorized', function () {
     it('should work properly', function () {
       var user = { id: 123, role: 2, access_token: "token123" };
       
@@ -82,7 +83,7 @@ describe('Service: Auth', function () {
     });
   });
 
-  describe('isLoggedIn()', function () {
+  describe('#isLoggedIn', function () {
     it('should return trun when there is current user', function () {
       var user = { id: 123, role: 2, access_token: "token123" };
       
@@ -94,7 +95,7 @@ describe('Service: Auth', function () {
     });
   });
 
-  describe('getId()', function () {
+  describe('#getId', function () {
     it('should return user id when user is set', function () {
       var user = { id: 123, role: 2, access_token: "token123" };
       
@@ -106,7 +107,7 @@ describe('Service: Auth', function () {
     });
   });
 
-  describe('getToken()', function () {
+  describe('#getToken', function () {
     it('should return user id when user is set', function () {
       var user = { id: 123, role: 2, access_token: "token123" };
       Auth.setUser(user);
@@ -117,7 +118,7 @@ describe('Service: Auth', function () {
     });
   });
 
-  describe('logout()', function () {
+  describe('#logout', function () {
     it('should call $cookieStore.remove and set null to current user', 
       function () {
       var user = { id: 123, role: 2, access_token: "token123" };
