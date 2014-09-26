@@ -12,13 +12,14 @@ npm start
 
 Test
 ---
-server
+####server
 ```sh
 npm test
 ```
-client
+####client
+```sh
 ./node_modules/karma/bin/karma start ./test/client/karma.conf.js
-
+```
 Demo
 ----
 http://angular-express-token-auth.herokuapp.com
