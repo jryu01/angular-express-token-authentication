@@ -97,21 +97,19 @@ angular.module('angularTokenAuthApp.services', [])
 function ($cookieStore, ACCESS_LEVELS) {
 
   var currentUser = $cookieStore.get('user');
-
-  var setUser = function (user) {
-    if (!user.role || user.role < 0) {
-      user.role = ACCESS_LEVELS.pub;
-    }
-    currentUser = user;
-    $cookieStore.put('user', currentUser);
-  };
-
+  
   return  {
     isAuthorized: function (lvl) {
       var userRole = currentUser ? currentUser.role : ACCESS_LEVELS.pub;
       return userRole >= lvl;
     },
-    setUser: setUser,
+    setUser: function (user) {
+      if (!user.role || user.role < 0) {
+        user.role = ACCESS_LEVELS.pub;
+      }
+      currentUser = user;
+      $cookieStore.put('user', currentUser);
+    },
     isLoggedIn: function () {
       return currentUser ? true : false;
     },

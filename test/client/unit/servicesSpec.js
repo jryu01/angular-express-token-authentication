@@ -34,13 +34,75 @@ describe('Service: Auth', function () {
     $provide.value('$cookieStore', cookieStoreMock);
     $provide.value('ACCESS_LEVELS', ACCESS_LEVELS_MOCK);
   }));
-  beforeEach(inject(function ($injector) {
-    Auth = $injector.get('Auth');
-  }));
+  describe('without set current user', function () {
 
-  //TODO: with user cookie and without user cookie 
-  it('should call $cookieStore.get on initialization', function () {
-    expect(cookieStoreMock.get).to.have.been.calledWith('user');
+    beforeEach(inject(function ($injector) {
+      cookieStoreMock.get.returns(null);
+      Auth = $injector.get('Auth');
+    }));
+
+    it('should call $cookieStore.get on initialization', function () {
+      expect(cookieStoreMock.get).to.have.been.calledWith('user');
+    });
+
+    it('should not authorized to user level', function () {
+      expect(Auth.isAuthorized(2)).to.be.false;
+    });
+
+    it('should not have user logged in', function () {
+      expect(Auth.isLoggedIn()).to.be.false;
+    });
+
+    it('should not have an user', function () {
+      expect(Auth.getUser()).to.be.not.ok;
+    });
+
+    it('should not have an unser id', function () {
+      expect(Auth.getId()).to.be.not.ok;
+    });
+
+    it('should not have an access_token', function () {
+      expect(Auth.getToken()).to.be.not.ok;
+    });
+  });
+
+  describe('with set user from cookie', function () {
+
+    beforeEach(inject(function ($injector) {
+      cookieStoreMock.get.returns({id:123, role: 2, access_token: "token123"});
+      Auth = $injector.get('Auth');
+    }));
+
+    it('should authorized to user level', function () {
+      expect(Auth.isAuthorized(2)).to.be.true;
+    });
+
+    it('should have user logged in', function () {
+      expect(Auth.isLoggedIn()).to.be.true;
+    });
+
+    it('should have an user', function () {
+      expect(Auth.getUser()).to.be.deep.equal({
+        id:123, 
+        role:2,
+        access_token: "token123" 
+      });
+    });
+
+    it('should have an unser id', function () {
+      expect(Auth.getId()).to.equal(123);
+    });
+
+    it('should have an access_token', function () {
+      expect(Auth.getToken()).to.equal('token123');
+    });
+
+    it('should be able to log out current user', function () {
+      Auth.logout();
+      expect(cookieStoreMock.remove).to.have.been.calledWith('user');
+      expect(Auth.getUser()).to.be.null;
+    });
+
   });
 
   describe('#setUser', function () {
